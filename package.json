@@ -1,7 +1,7 @@
 {
-  "name": "angular-router-loader",
-  "version": "0.6.0",
-  "description": "A webpack loader for Angular that enables string-based module loading with the Angular Router",
+  "name": "angular-chunk-loader",
+  "version": "0.1.0",
+  "description": "A webpack loader for Angular that enables manual chunk importing",
   "main": "src/index.js",
   "scripts": {
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
@@ -12,20 +12,20 @@
     "angular",
     "webpack",
     "loader",
-    "router",
+    "chunk",
     "lazy-loading"
   ],
-  "author": "Brandon Roberts",
+  "author": "Michal Filip",
   "license": "MIT",
   "dependencies": {
     "loader-utils": "^1.0.2"
   },
   "bugs": {
-    "url": "https://github.com/brandonroberts/angular-router-loader/issues"
+    "url": "https://github.com/michal-filip/angular-chunk-loader/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brandonroberts/angular-router-loader.git"
+    "url": "git+https://github.com/michal-filip/angular-chunk-loader.git"
   },
   "devDependencies": {
     "conventional-changelog-cli": "^1.2.0",

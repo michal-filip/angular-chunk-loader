@@ -1,19 +1,14 @@
-# angular-router-loader
+# angular-chunk-loader
 
-[![CircleCI](https://circleci.com/gh/brandonroberts/angular-router-loader.svg?style=shield&circle-token=a8a709588d22664ab74922050eda672898d2d417)](https://circleci.com/gh/brandonroberts/angular-router-loader)
-[![npm version](https://badge.fury.io/js/angular-router-loader.svg)](https://badge.fury.io/js/angular-router-loader)
-
-A Webpack loader for Angular that enables string-based module loading with the `Angular Router`
-
-*Package was previously named `angular2-router-loader`*
+A Webpack loader for Angular that allows async importing of chunks, especially useful for fetching and using entryComponents across feature modules
 
 ## Installation
 
-  `npm install angular-router-loader --save-dev`
+  `npm install angular-chunk-loader --save-dev`
 
 ## Usage
 
-Add the `angular-router-loader` to your typescript loaders
+Add the `angular-chunk-loader` to your typescript loaders
 
 ```ts
 loaders: [
@@ -21,7 +16,7 @@ loaders: [
     test: /\.ts$/,
     loaders: [
       'awesome-typescript-loader',
-      'angular-router-loader'
+      'angular-chunk-loader'
     ]
   }
 ]
@@ -29,31 +24,19 @@ loaders: [
 
 ## Lazy Loading
 
-In your route configuration, use `loadChildren` with a relative path to your lazy loaded angular module. The string is delimited with a `#` where the right side of split is the angular module class name.
+In your source files, use `System.import()` with a relative path to your lazy loaded angular module.
 
 ```ts
-import { Routes } from '@angular/router';
 
-export const routes: Routes = [
-  { path: 'lazy', loadChildren: './lazy.module#LazyModule' }
-];
-```
-
-**NOTE**: When specifying a relative path to lazy loaded module, one of the following two conditions *must* hold:
-
-* The routes are defined in the same module file where it is imported with `RouterModule.forRoot` or `RouterModule.forChild`
-* The routes are defined in a separate routing file, and that routing file is a sibling of module file.
-
-## Synchronous Loading
-
-For synchronous module loading, add the `sync=true` as a query string value to your `loadChildren` string. The module will be included in your bundle and not lazy-loaded.
-
-```ts
-import { Routes } from '@angular/router';
-
-export const routes: Routes = [
-  { path: 'lazy', loadChildren: './lazy.module#LazyModule?sync=true' }
-];
+System.import('./app/module/+my-feature/my-feature.module').then((chunk: { MyFeatureModule: Type<any>, MyFeatureModuleNgFactory: NgModuleFactory<any> }) => {
+  let compiledModule: NgModuleFactory<any>;
+  if (chunk.RequisitionModuleNgFactory instanceof NgModuleFactory) {
+    compiledModule = chunk.RequisitionModuleNgFactory; // AOT
+  } else {
+    compiledModule = this.compiler.compileModuleSync(chunk.RequisitionModule);
+  }
+  // further process - eg. lookup component factory and instantiate components
+}
 ```
 
 ## Additional Documentation
@@ -64,6 +47,10 @@ export const routes: Routes = [
 
 
 ## Credits
+
+This loader was forked from the following project:
+
+[angular-router-loader](https://github.com/brandonroberts/angular-router-loader) by [brandonroberts](https://github.com/brandonroberts)
 
 This loader was inspired by the following projects.
 

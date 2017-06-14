@@ -5,8 +5,8 @@ var utils = require('./utils');
 module.exports = function(source, sourcemap) {
   this.cacheable && this.cacheable();
 
-  // regex for loadChildren string
-  var loadChildrenRegex = /loadChildren[\s]*:[\s]*['|"](.*?)['|"]/gm;
+  // regex for System.import string
+  var systemImportRegex = /System\.import\([\s]*['|"](.*?)['|"]\)/gm;
 
   // parse query params
   var query = loaderUtils.getOptions(this) || {};
@@ -27,7 +27,7 @@ module.exports = function(source, sourcemap) {
   var filename = utils.getFilename(resourcePath);
   var isJs = path.extname(resourcePath).toLowerCase() === '.js';
 
-  var replacedSource = source.replace(loadChildrenRegex, function(match, loadString) {
+  var replacedSource = source.replace(systemImportRegex, function(match, loadString) {
     // check for query string in loadString
     var queryIndex = loadString.lastIndexOf('?');
     var hasQuery = queryIndex !== -1;
@@ -52,9 +52,11 @@ module.exports = function(source, sourcemap) {
     if (aot && filename.substr(-9) !== moduleSuffix.substr(-9) && isRelativePath) {
       // the full path of the directory of the current resource
       var currentDir = path.dirname(resourcePath);
+      console.log('currentDir', currentDir);
 
       // the absolute path of our destenation NgModule module.
       var absoluteNgModulePath = path.resolve(currentDir, filePath);
+      console.log('absoluteNgModulePath', absoluteNgModulePath);
 
       /*
        *  If "genDir" is empty the compiler emits to the source tree, next to the original component source code.
@@ -74,31 +76,27 @@ module.exports = function(source, sourcemap) {
          */
 
         var relativeNgModulePath = path.relative(baseDir, absoluteNgModulePath);
+        console.log('relativeNgModulePath', relativeNgModulePath);
         absoluteNgModulePath = path.join(path.resolve(baseDir, genDir), relativeNgModulePath);
+        console.log('absoluteNgModulePath', absoluteNgModulePath);
       }
 
 
       // filePath is an absolute path, we need the relative filePath:
       filePath = path.relative(currentDir, absoluteNgModulePath);
+      console.log('filePath', filePath);
     }
 
     filePath = utils.normalizeFilePath(filePath, isRelativePath);
+    console.log('filePath', filePath);
 
-    var replacement = match;
-
-    if (sync) {
-      replacement = utils.getSyncLoader(filePath, moduleName, inline);
-    } else if (loader === 'system') {
-      replacement = utils.getSystemLoader(filePath, moduleName, inline);
-    } else {
-      replacement = utils.getRequireLoader(filePath, chunkName, moduleName, inline, isJs);
-    }
+    var replacement = utils.getSystemLoader(filePath, moduleName);
 
     if (debug) {
-      console.log('[angular-router-loader]: --DEBUG--');
-      console.log('[angular-router-loader]: File: ' + resourcePath);
-      console.log('[angular-router-loader]: Original: ' + match);
-      console.log('[angular-router-loader]: Replacement: ' + replacement);
+      console.log('[angular-chunk-loader]: --DEBUG--');
+      console.log('[angular-chunk-loader]: File: ' + resourcePath);
+      console.log('[angular-chunk-loader]: Original: ' + match);
+      console.log('[angular-chunk-loader]: Replacement: ' + replacement);
     }
 
     return replacement;
