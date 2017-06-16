@@ -52,11 +52,9 @@ module.exports = function(source, sourcemap) {
     if (aot && filename.substr(-9) !== moduleSuffix.substr(-9) && isRelativePath) {
       // the full path of the directory of the current resource
       var currentDir = path.dirname(resourcePath);
-      console.log('currentDir', currentDir);
 
       // the absolute path of our destenation NgModule module.
       var absoluteNgModulePath = path.resolve(currentDir, filePath);
-      console.log('absoluteNgModulePath', absoluteNgModulePath);
 
       /*
        *  If "genDir" is empty the compiler emits to the source tree, next to the original component source code.
@@ -76,19 +74,15 @@ module.exports = function(source, sourcemap) {
          */
 
         var relativeNgModulePath = path.relative(baseDir, absoluteNgModulePath);
-        console.log('relativeNgModulePath', relativeNgModulePath);
         absoluteNgModulePath = path.join(path.resolve(baseDir, genDir), relativeNgModulePath);
-        console.log('absoluteNgModulePath', absoluteNgModulePath);
       }
 
 
       // filePath is an absolute path, we need the relative filePath:
       filePath = path.relative(currentDir, absoluteNgModulePath);
-      console.log('filePath', filePath);
     }
 
     filePath = utils.normalizeFilePath(filePath, isRelativePath);
-    console.log('filePath', filePath);
 
     var replacement = utils.getSystemLoader(filePath, moduleName);
 
