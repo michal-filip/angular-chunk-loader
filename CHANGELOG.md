@@ -1,10 +1,20 @@
+<a name="0.1.2"></a>
+## [0.1.2](https://github.com/michal-filip/angular-chunk-loader/compare/v0.1.1...v0.1.2) (2017-06-20)
+
+
+### Bug Fixes
+
+* **loader:** add support for webpack chunk-naming comments ([7252feb](https://github.com/michal-filip/angular-chunk-loader/commit/7252feb))
+
+
+
 <a name="0.1.1"></a>
 ## [0.1.1](https://github.com/michal-filip/angular-chunk-loader/compare/v0.1.0...v0.1.1) (2017-06-16)
 
 
 ### Bug Fixes
 
-* **loader:** Removed extra leftover debugging comments ([0885801](https://github.com/michal-filip/angular-chunk-loader/commit/0885801))
+* **loader:** Removed extra leftover debugging comments ([1406ab7](https://github.com/michal-filip/angular-chunk-loader/commit/1406ab7))
 
 
 

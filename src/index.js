@@ -6,7 +6,7 @@ module.exports = function(source, sourcemap) {
   this.cacheable && this.cacheable();
 
   // regex for System.import string
-  var systemImportRegex = /System\.import\([\s]*['|"](.*?)['|"]\)/gm;
+  var systemImportRegex = /System\.import\((\/\*[^\/]*\*\/)?[\s]*['|"](.*?)['|"][\s]*(\/\*[^\/]*\*\/)?\)/gm;
 
   // parse query params
   var query = loaderUtils.getOptions(this) || {};
@@ -27,7 +27,7 @@ module.exports = function(source, sourcemap) {
   var filename = utils.getFilename(resourcePath);
   var isJs = path.extname(resourcePath).toLowerCase() === '.js';
 
-  var replacedSource = source.replace(systemImportRegex, function(match, loadString) {
+  var replacedSource = source.replace(systemImportRegex, function(match, preComment, loadString, postComment) {
     // check for query string in loadString
     var queryIndex = loadString.lastIndexOf('?');
     var hasQuery = queryIndex !== -1;
